@@ -6,7 +6,7 @@ format: html
 theme: cyborg
 ---
 ## Introduction
-In this tutorial, we are taking images captured by an iPhone camera and transforming them to their anime form. There are 3 differents models to select from, each yielding their own anime version. `hayao-v2` generates the best results. 
+In this tutorial, we are taking images captured by an iPhone camera and transforming them to their anime form. There are 3 differents models to select from, each yielding their own anime version. `hayao-v2` generates the best results. Clone this repo: `https://github.com/persian-punks/animeify_img.git`
 
 ## Codebase Updates
 - I forked this repo `https://github.com/ptran1203/pytorch-animeGAN` to fix a dependency (described below) that was breaking the image conversion process. These changes were made in the `inference.py` file. I commented out incorrect lines 16 & 148 and made the corrections in lines 17 & 149.
