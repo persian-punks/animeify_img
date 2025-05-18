@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Animeifying Persian Cats",
+    "section": "",
+    "text": "In this tutorial, we are taking images captured by an iPhone camera and transforming them to their anime form. There are 3 differents models to select from, each yielding their own anime version. hayao-v2 generates the best results."
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "Animeifying Persian Cats",
+    "section": "",
+    "text": "In this tutorial, we are taking images captured by an iPhone camera and transforming them to their anime form. There are 3 differents models to select from, each yielding their own anime version. hayao-v2 generates the best results."
+  },
+  {
+    "objectID": "index.html#codebase-updates",
+    "href": "index.html#codebase-updates",
+    "title": "Animeifying Persian Cats",
+    "section": "Codebase Updates",
+    "text": "Codebase Updates\n\nI forked this repo https://github.com/ptran1203/pytorch-animeGAN to fix a dependency (described below) that was breaking the image conversion process. These changes were made in the inference.py file. I commented out incorrect lines 16 & 148 and made the corrections in lines 17 & 149.\nI added the model_weights directory and downloaded & stored the pytorch models directly in the repo. Then, in the utils/common.py file, I made changes in the RELEASED_WEIGHTS variable and the load_state_dict(weight, map_location) function, so that the models are being loaded directly from the repo rather than being downloaded from the GitHub URLs every time in the RELEASED_WEIGHTS variable.\nFinally, I added a results directory with two sub-directories (original & animeify) which contain our original and converted images."
+  },
+  {
+    "objectID": "index.html#generating-comparing-results",
+    "href": "index.html#generating-comparing-results",
+    "title": "Animeifying Persian Cats",
+    "section": "Generating & Comparing Results",
+    "text": "Generating & Comparing Results\n\nBeatrix\n\nOriginal\n\n\n\nBeatrix Original\n\n\n\n\nhayao:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight hayao:v2 --src results/original/beatrix.jpg --out results/animeify/beatrix_hayao_v2.jpg \n\n\nshinkai:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight shinkai:v2 --src results/original/beatrix.jpg --out results/animeify/beatrix_shinkai_v2.jpg \n\n\narcane:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight arcane:v2 --src results/original/beatrix.jpg --out results/animeify/beatrix_arcane_v2.jpg \n\n\n\nFrank\n\nOriginal\n\n\n\nFrank Original\n\n\n\n\nhayao:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight hayao:v2 --src results/original/frank.jpg --out results/animeify/frank_hayao_v2.jpg \n\n\nshinkai:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight shinkai:v2 --src results/original/frank.jpg --out results/animeify/frank_shinkai_v2.jpg \n\n\narcane:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight arcane:v2 --src results/original/frank.jpg --out results/animeify/frank_arcane_v2.jpg"
+  },
+  {
+    "objectID": "notebooks/animeGAN.html",
+    "href": "notebooks/animeGAN.html",
+    "title": "Animeify",
+    "section": "",
+    "text": "from google.colab import drive, output\nimport torch\ndv = torch.cuda.get_device_name(0)\nprint(dv)\n\ndrive.mount('/content/drive', force_remount=False)\nrepo = \"Pytorch-animeGAN\"\n%cd \"/content\"\n!rm -rf {repo}\n!git clone https://github.com/ptran1203/{repo}\n%cd {repo}\noutput.clear()\n\n\nimport os\nimport urllib\n\ndata_path = 'anime-gan.zip'\ndataset_url = 'https://github.com/ptran1203/pytorch-animeGAN/releases/download/v1.0/dataset_v1.zip'\n\nif not os.path.exists(\"/content/dataset\"):\n    !wget -O {data_path} {dataset_url}\n    !unzip {data_path} -d /content\n    !rm {data_path}\n\n    if not os.path.exists(\"/content/dataset\"):\n        raise ValueError(f\"Download Failed, {data_path}\")\n\noutput.clear()\n\n\nworking_dir = '/content/drive/MyDrive/animeGAN'\nprint(f\"You're running on {dv}\")\n\n\n!python3 train.py --real_image_dir '/content/dataset/train_photo'\\\n                  --anime_image_dir '/content/dataset/Hayao'\\\n                  --batch 8\\\n                  --model v2\\\n                  --amp --cache\\\n                  --init_epochs 10\\\n                  --exp_dir {working_dir}\\\n                  --gan_loss lsgan\\\n                  --init_lr 0.0001\\\n                  --lr_g 0.00002\\\n                  --lr_d 0.00004\\\n                  --wadvd 300.0\\\n                  --wadvg 300.0\\\n                  --wcon 1.5\\\n                  --wgra 3.0\\\n                  --wcol 70.0\\\n                  --use_sn\n\n\nfrom inference import Predictor\npredictor = Predictor(f\"{working_dir}/Generatorv2_Hayao.pt\")\n\nWeight loaded, ready to predict\n\n\n\nimport cv2\nimport random\nimport matplotlib.pyplot as plt\nimport numpy as np\n\ndef random_img(img_dir):\n    # p = '/content/test_4.png'\n    p = os.path.join(img_dir, random.choice(os.listdir(img_dir)))\n    return cv2.imread(p)[:, :, ::-1]\n\nimage = random_img('/content/dataset/test/HR_photo')\nimage = cv2.resize(image, (768, 512))\n\nanime_img = (predictor.transform(image) + 1) / 2\n\nfig = plt.figure(figsize=(18, 25))\nfig.add_subplot(1, 2, 1)\nplt.imshow(image)\nfig.add_subplot(1, 2, 2)\nplt.imshow(anime_img[0])\nplt.show()\n\nInference Image\n\n!python3 inference_image.py --checkpoint {working_dir}/Generatorv2_Hayao.pt\\\n                            --src /content/dataset/test/HR_photo\\\n                            --dest inference_shinkai\n\nWeight loaded, ready to predict\nFound 45 images in /content/dataset/test/HR_photo\n100% 45/45 [00:24&lt;00:00,  1.82it/s]\n\n\nInference video\n\n!python3 inference_video.py --checkpoint {ckp_dir}\\\n                            --src /content/test_vid_3.mp4\\\n                            --dest /content/test_vid_3_anime.mp4\\\n                            --batch-size 2"
+  },
+  {
+    "objectID": "notebooks/animeGAN_inference.html",
+    "href": "notebooks/animeGAN_inference.html",
+    "title": "Inference Image",
+    "section": "",
+    "text": "from google.colab import output\nimport torch\n\nrepo = \"Pytorch-animeGAN\"\n%cd \"/content\"\n!rm -rf {repo}\n!git clone https://github.com/ptran1203/{repo}\n%cd {repo}\noutput.clear()\nimport cv2\nimport random\nimport matplotlib.pyplot as plt\nimport os\nimport numpy as np\nfrom utils import read_image, resize_image\nfrom inference import Predictor\n\npredictor= Predictor('hayao:v2')\n\nurl = 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/image-VAHwqno5k7JFTg-Golden_Brid.width-1200.format-webp.webp'\n\npredictor.transform_and_show(url, figsize=(18, 10))\npredictor.transform_and_show(\n    \"https://github.com/ptran1203/pytorch-animeGAN/blob/master/example/result/real/1%20(20).jpg?raw=true\",\n    figsize=(18, 10)\n)"
+  },
+  {
+    "objectID": "notebooks/animeGAN_inference.html#inference-video",
+    "href": "notebooks/animeGAN_inference.html#inference-video",
+    "title": "Inference Image",
+    "section": "Inference Video",
+    "text": "Inference Video\n\n!pip install -q pytube\n\n\n!pytube https://www.youtube.com/watch?v=Ac_bshzhI_M&pp=ygUNc2hvcnQgdHJhaWxlcg%3D%3D --resolution 360p --target /content/data\n\n\n# You will need to store your video to Drive, since colab dont effectively view the video\nfrom google.colab import drive\ndrive.mount('/content/drive')\n\n\n!rm -rf /content/trailer_anime.mp4\n\n\n!python3 inference_video.py --weight hayao:v2\\\n                        --src '/content/Pytorch-animeGAN/Gina - Short Film Trailer.mp4'\\\n                        --out /content/trailer_anime.mp4\\\n                        --batch-size 8 --start 0 --end 100\n\n\n!cp /content/trailer_anime.mp4 /content/drive/MyDrive/trailer_anime.mp4"
+  }
+]

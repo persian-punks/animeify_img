@@ -1,0 +1,10 @@
+project:
+  type: website
+  title: "Animeify"
+  output-dir: docs
+
+format:
+  html:
+    theme: cyborg
+    highlight: zenburn
+    toc: FALSE
