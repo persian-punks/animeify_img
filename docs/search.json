@@ -2,28 +2,28 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Animeifying Persian Cats",
+    "title": "Animeify",
     "section": "",
     "text": "In this tutorial, we are taking images captured by an iPhone camera and transforming them to their anime form. There are 3 differents models to select from, each yielding their own anime version. hayao-v2 generates the best results."
   },
   {
     "objectID": "index.html#introduction",
     "href": "index.html#introduction",
-    "title": "Animeifying Persian Cats",
+    "title": "Animeify",
     "section": "",
     "text": "In this tutorial, we are taking images captured by an iPhone camera and transforming them to their anime form. There are 3 differents models to select from, each yielding their own anime version. hayao-v2 generates the best results."
   },
   {
     "objectID": "index.html#codebase-updates",
     "href": "index.html#codebase-updates",
-    "title": "Animeifying Persian Cats",
+    "title": "Animeify",
     "section": "Codebase Updates",
     "text": "Codebase Updates\n\nI forked this repo https://github.com/ptran1203/pytorch-animeGAN to fix a dependency (described below) that was breaking the image conversion process. These changes were made in the inference.py file. I commented out incorrect lines 16 & 148 and made the corrections in lines 17 & 149.\nI added the model_weights directory and downloaded & stored the pytorch models directly in the repo. Then, in the utils/common.py file, I made changes in the RELEASED_WEIGHTS variable and the load_state_dict(weight, map_location) function, so that the models are being loaded directly from the repo rather than being downloaded from the GitHub URLs every time in the RELEASED_WEIGHTS variable.\nFinally, I added a results directory with two sub-directories (original & animeify) which contain our original and converted images."
   },
   {
     "objectID": "index.html#generating-comparing-results",
     "href": "index.html#generating-comparing-results",
-    "title": "Animeifying Persian Cats",
+    "title": "Animeify",
     "section": "Generating & Comparing Results",
     "text": "Generating & Comparing Results\n\nBeatrix\n\nOriginal\n\n\n\nBeatrix Original\n\n\n\n\nhayao:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight hayao:v2 --src results/original/beatrix.jpg --out results/animeify/beatrix_hayao_v2.jpg \n\n\nshinkai:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight shinkai:v2 --src results/original/beatrix.jpg --out results/animeify/beatrix_shinkai_v2.jpg \n\n\narcane:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight arcane:v2 --src results/original/beatrix.jpg --out results/animeify/beatrix_arcane_v2.jpg \n\n\n\nFrank\n\nOriginal\n\n\n\nFrank Original\n\n\n\n\nhayao:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight hayao:v2 --src results/original/frank.jpg --out results/animeify/frank_hayao_v2.jpg \n\n\nshinkai:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight shinkai:v2 --src results/original/frank.jpg --out results/animeify/frank_shinkai_v2.jpg \n\n\narcane:v2\nTo generate results, execute this command in your terminal: python3 inference.py --weight arcane:v2 --src results/original/frank.jpg --out results/animeify/frank_arcane_v2.jpg"
   },

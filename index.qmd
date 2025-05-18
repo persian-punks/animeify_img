@@ -1,6 +1,4 @@
 ---
-title: "Animeifying Persian Cats"
-author: 'Collin Real'
 execute: 
     warning: false
     error: false
